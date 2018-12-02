@@ -8,13 +8,14 @@ export function loadInitAcquaintance(responseJson) {
 
 // thunk
 
-export function initAcquaintance() {
+export function initAcquaintances() {
   return function(dispatch) {
     let requestParams = {};
     requestParams.action = "INIT";
     requestParams.service = "ACQUAINTANCE_SVC";
-    //requestParams.appForms = new Array("LOGIN_FORM","REGISTRATION_FORM","FORGOTPASSWORD_FORM","PASSWORD_CHANGE_FORM");
-    requestParams.appTexts = new Array("ACQUAINTANCE_PAGE");
+    requestParams.appForms = new Array("SOCIAL_ACQUAINTANCE_FORM");
+    requestParams.appTexts = new Array("SOCIAL_ACQUAINTANCE_PAGE");
+    requestParams.appLabels = new Array("SOCIAL_ACQUAINTANCE_TABLE");
     let params = {};
     params.requestParams = requestParams;
     params.URI = '/api/member/callService';
