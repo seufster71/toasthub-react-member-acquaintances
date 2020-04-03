@@ -13,9 +13,9 @@ export function initAcquaintances() {
     let requestParams = {};
     requestParams.action = "INIT";
     requestParams.service = "ACQUAINTANCE_SVC";
-    requestParams.appForms = new Array("SOCIAL_ACQUAINTANCE_FORM");
-    requestParams.appTexts = new Array("SOCIAL_ACQUAINTANCE_PAGE");
-    requestParams.appLabels = new Array("SOCIAL_ACQUAINTANCE_TABLE");
+    requestParams.prefForms = new Array("SOCIAL_ACQUAINTANCE_FORM");
+    requestParams.prefTexts = new Array("SOCIAL_ACQUAINTANCE_PAGE");
+    requestParams.prefLabels = new Array("SOCIAL_ACQUAINTANCE_TABLE");
     let params = {};
     params.requestParams = requestParams;
     params.URI = '/api/member/callService';
