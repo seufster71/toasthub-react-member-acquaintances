@@ -2,50 +2,66 @@
 * Author Edward Seufert
 */
 'use-strict';
-import React, {Component} from 'react';
-import PropTypes from 'prop-types';
-import {connect} from 'react-redux';
-import {bindActionCreators} from 'redux';
-import * as appPrefActions from './acquaintances-actions';
+import React, { useEffect } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
+import { useNavigate, useLocation } from "react-router-dom";
+import * as actions from './acquaintances-actions';
 import fuLogger from '../../core/common/fu-logger';
 import AcquaintancesView from '../../memberView/acquaintances/acquaintances-view';
+import BaseContainer from '../../core/container/base-container';
 
-class AcquaintancesContainer extends Component {
-	constructor(props) {
-		super(props);
-		this.onClick = this.onClick.bind(this);
+function AcquaintancesContainer() {
+	const itemState = useSelector((state) => state.pmproject);
+	const session = useSelector((state) => state.session);
+	const appPrefs = useSelector((state) => state.appPrefs);
+	const dispatch = useDispatch();
+	const location = useLocation();
+	const navigate = useNavigate();
+
+	useEffect(() => {
+			dispatch(actions.init());
+	}, []);
+
+	const onListLimitChange = (fieldName,event) => {
+		BaseContainer.onListLimitChange({state:itemState,actions:actions,dispatch:dispatch,appPrefs:appPrefs,fieldName,event});
+	}
+	const onPaginationClick = (value) => {
+		BaseContainer.onPaginationClick({state:itemState,actions:actions,dispatch:dispatch,value});
+	}
+	const onSearchChange = (field,event) => {
+		BaseContainer.onSearchChange({state:itemState,actions:actions,dispatch:dispatch,field,event});
+	}
+	const onSearchClick = (fieldName,event) => {
+		BaseContainer.onSearchClick({state:itemState,actions:actions,dispatch:dispatch,fieldName,event});
+	}
+	const inputChange = (type,field,value,event) => {
+		BaseContainer.inputChange({state:itemState,actions:actions,dispatch:dispatch,appPrefs:appPrefs,type,field,value,event});
+	}
+	const onOrderBy = (selectedOption, event) => {
+		BaseContainer.onOrderBy({state:itemState,actions:actions,dispatch:dispatch,appPrefs:appPrefs,selectedOption,event});
+	}
+	const onSave = () => {
+		BaseContainer.onSave({state:itemState,actions:actions,dispatch:dispatch,appPrefs:appPrefs,form:"PM_PROJECT_FORM"});
+	}
+	const closeModal = () => {
+		BaseContainer.closeModal({actions:actions,dispatch:dispatch});
+	}
+	const onCancel = () => {
+		BaseContainer.onCancel({state:itemState,actions:actions,dispatch:dispatch});
+	}
+	const goBack = () => {
+		BaseContainer.goBack({navigate});
+	}
+	const onBlur = (field) => {
+		BaseContainer.onCancel({state:itemState,actions:actions,dispatch:dispatch,field});
 	}
 
-	componentDidMount() {
-		this.props.actions.initAcquaintances();
-	}
+	fuLogger.log({level:'TRACE',loc:'AcquaintancesContainer::render',msg:"Hi there"});
+    return (
+		<AcquaintancesView 
+		itemState={itemState}/>
+	);
 
-	onClick(code,index) {
-		fuLogger.log({level:'TRACE',loc:'AcquaintancesContainer::onClick',msg:"clicked " + code});
-
-	}
-
-  render() {
-			fuLogger.log({level:'TRACE',loc:'AcquaintancesContainer::render',msg:"Hi there"});
-      return (
-				<AcquaintancesView acquaintances={this.props.acquaintances}/>
-			);
-  }
 }
 
-AcquaintancesContainer.propTypes = {
-	appPrefs: PropTypes.object,
-	lang: PropTypes.string,
-	actions: PropTypes.object,
-	acquaintances: PropTypes.object
-};
-
-function mapStateToProps(state, ownProps) {
-  return {lang:state.lang, appPrefs:state.appPrefs, acquaintances:state.acquaintances};
-}
-
-function mapDispatchToProps(dispatch) {
-  return { actions:bindActionCreators(appPrefActions,dispatch) };
-}
-
-export default connect(mapStateToProps,mapDispatchToProps)(AcquaintancesContainer);
+export default AcquaintancesContainer;

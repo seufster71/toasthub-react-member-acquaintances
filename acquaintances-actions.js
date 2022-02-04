@@ -8,7 +8,7 @@ export function loadInitAcquaintance(responseJson) {
 
 // thunk
 
-export function initAcquaintances() {
+export function init() {
   return function(dispatch) {
     let requestParams = {};
     requestParams.action = "INIT";
