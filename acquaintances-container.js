@@ -4,22 +4,19 @@
 'use-strict';
 import React, { useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { useNavigate, useLocation } from "react-router-dom";
 import * as actions from './acquaintances-actions';
 import fuLogger from '../../core/common/fu-logger';
 import AcquaintancesView from '../../memberView/acquaintances/acquaintances-view';
 import BaseContainer from '../../core/container/base-container';
 
-function AcquaintancesContainer() {
-	const itemState = useSelector((state) => state.pmproject);
+function AcquaintancesContainer({navigate}) {
+	const itemState = useSelector((state) => state.acquaintances);
 	const session = useSelector((state) => state.session);
 	const appPrefs = useSelector((state) => state.appPrefs);
 	const dispatch = useDispatch();
-	const location = useLocation();
-	const navigate = useNavigate();
 
 	useEffect(() => {
-			dispatch(actions.init());
+			dispatch(actions.init({lang:session.selected.lang}));
 	}, []);
 
 	const onListLimitChange = (fieldName,event) => {
@@ -41,7 +38,7 @@ function AcquaintancesContainer() {
 		BaseContainer.onOrderBy({state:itemState,actions:actions,dispatch:dispatch,appPrefs:appPrefs,selectedOption,event});
 	}
 	const onSave = () => {
-		BaseContainer.onSave({state:itemState,actions:actions,dispatch:dispatch,appPrefs:appPrefs,form:"PM_PROJECT_FORM"});
+		BaseContainer.onSave({state:itemState,actions:actions,dispatch:dispatch,appPrefs:appPrefs,form:"SOCIAL_ACQUAINTANCE_FORM"});
 	}
 	const closeModal = () => {
 		BaseContainer.closeModal({actions:actions,dispatch:dispatch});
@@ -55,11 +52,30 @@ function AcquaintancesContainer() {
 	const onBlur = (field) => {
 		BaseContainer.onCancel({state:itemState,actions:actions,dispatch:dispatch,field});
 	}
+	
+	const onOption = (code,item) => {
+		fuLogger.log({level:'TRACE',loc:'ProductContainer::onOption',msg:" code "+code});
+		if (BaseContainer.onOptionBase({state:itemState,actions:actions,dispatch:dispatch,code:code,appPrefs:appPrefs,item:item})) {
+			return;
+		}
+		
+	}
 
-	fuLogger.log({level:'TRACE',loc:'AcquaintancesContainer::render',msg:"Hi there"});
+	fuLogger.log({level:'TRACE',loc:'AcquaintancesContainer::render',msg:JSON.stringify(itemState)});
     return (
 		<AcquaintancesView 
-		itemState={itemState}/>
+		itemState={itemState}
+		appPrefs={appPrefs}
+		onListLimitChange={onListLimitChange}
+		onSearchChange={onSearchChange}
+		onSearchClick={onSearchClick}
+		onPaginationClick={onPaginationClick}
+		onOrderBy={onOrderBy}
+		onOption={onOption}
+		closeModal={closeModal}
+		inputChange={inputChange}
+		goBack={goBack}
+		session={session}/>
 	);
 
 }
