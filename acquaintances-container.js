@@ -9,7 +9,7 @@ import fuLogger from '../../core/common/fu-logger';
 import AcquaintancesView from '../../memberView/acquaintances/acquaintances-view';
 import BaseContainer from '../../core/container/base-container';
 
-function AcquaintancesContainer({navigate}) {
+function AcquaintancesContainer({navigate, location}) {
 	const itemState = useSelector((state) => state.acquaintances);
 	const session = useSelector((state) => state.session);
 	const appPrefs = useSelector((state) => state.appPrefs);
@@ -75,7 +75,9 @@ function AcquaintancesContainer({navigate}) {
 		closeModal={closeModal}
 		inputChange={inputChange}
 		goBack={goBack}
-		session={session}/>
+		session={session}
+		navigate={navigate}
+		location={location}/>
 	);
 
 }
